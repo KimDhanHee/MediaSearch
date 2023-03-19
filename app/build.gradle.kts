@@ -36,7 +36,6 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
-        compose = true
         dataBinding = true
     }
     composeOptions {
@@ -50,18 +49,13 @@ android {
 }
 
 dependencies {
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-    implementation(libs.bundles.androidx.compose)
+    implementation(project(":feature:search"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.compose.activity)
-    implementation(libs.androidx.compose.viewmodel)
     implementation(libs.androidx.viewpager)
     implementation(libs.android.material)
     testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.compose.test.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
     implementation(libs.hilt.android)
