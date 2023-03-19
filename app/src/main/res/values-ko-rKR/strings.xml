@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">미디어 검색</string>
+  
+  <string name="tab_title_search">검색</string>
+  <string name="tab_title_interests">관심</string>
+</resources>

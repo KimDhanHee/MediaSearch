@@ -1,5 +1,6 @@
 package com.danytothemoon.searchmedia
 
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -21,9 +22,10 @@ enum class SearchMediaPage {
   INTERESTS,
   ;
 
-  val tabName: String
+  @get:StringRes
+  val tabTitleRes: Int
     get() = when (this) {
-      SEARCH -> "Search"
-      INTERESTS -> "Interests"
+      SEARCH -> R.string.tab_title_search
+      INTERESTS -> R.string.tab_title_interests
     }
 }
