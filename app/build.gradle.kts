@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.compose.activity)
     implementation(libs.androidx.compose.viewmodel)
+    implementation(libs.androidx.viewpager)
+    implementation(libs.android.material)
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.compose.test.junit)
     androidTestImplementation(libs.androidx.test.ext)

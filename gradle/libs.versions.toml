@@ -4,6 +4,8 @@ kotlin = "1.8.10"
 
 androidxCore = "1.9.0"
 androidxLifecycle = "2.6.0"
+androidxViewpager = "1.0.0"
+androidMaterial = "1.7.0"
 
 androidxComposeBom = "2023.01.00"
 androidxComposeCompiler = "1.4.2"
@@ -25,6 +27,8 @@ retrofitKotlinxSerialization = "0.8.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-viewpager = { module = "androidx.viewpager2:viewpager2", version.ref = "androidxViewpager" }
+android-material = { module = "com.google.android.material:material", version.ref = "androidMaterial" }
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
