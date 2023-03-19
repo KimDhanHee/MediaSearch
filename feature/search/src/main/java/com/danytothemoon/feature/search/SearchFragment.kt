@@ -53,7 +53,7 @@ class SearchFragment : Fragment() {
   }
 
   @Composable
-  fun SearchScreen() {
+  private fun SearchScreen(viewmodel: SearchViewModel = viewModel()) {
     Column {
       SearchTextField(onClickSearch = { keyword ->
       })
@@ -63,7 +63,7 @@ class SearchFragment : Fragment() {
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
   @Composable
-  fun SearchTextField(onClickSearch: (String) -> Unit) {
+  private fun SearchTextField(onClickSearch: (String) -> Unit) {
     var searchKeyword by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     TextField(
@@ -88,7 +88,7 @@ class SearchFragment : Fragment() {
 
   @OptIn(ExperimentalFoundationApi::class)
   @Composable
-  fun SearchResultList() {
+  private fun SearchResultList() {
     LazyVerticalStaggeredGrid(
       columns = StaggeredGridCells.Fixed(2),
       contentPadding = PaddingValues(8.dp),
