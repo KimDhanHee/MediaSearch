@@ -1,7 +1,9 @@
 plugins {
+  kotlin("kapt")
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
   id("kotlinx-serialization")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -20,5 +22,8 @@ android {
 dependencies {
   implementation(libs.retrofit.core)
   implementation(libs.retrofit.kotlinx.serialization)
-  implementation(libs.kotlinx.serialization)
+  implementation(libs.kotlinx.serialization.json)
+
+  implementation(libs.hilt.android)
+  kapt(libs.hilt.compiler)
 }
