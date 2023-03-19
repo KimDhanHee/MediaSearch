@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.material3.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import com.danytothemoon.core.designsystem.theme.SearchMediaTheme
 
 class InterestsFragment : Fragment() {
   override fun onCreateView(
@@ -15,7 +16,9 @@ class InterestsFragment : Fragment() {
     savedInstanceState: Bundle?,
   ): View = ComposeView(requireContext()).apply {
     setContent {
-      Text(text = "Interests")
+      SearchMediaTheme {
+        Text(text = "Interests")
+      }
     }
   }
 }
