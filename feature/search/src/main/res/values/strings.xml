@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="search_input_text_field_hint">enter your media search keyword</string>
+</resources>
