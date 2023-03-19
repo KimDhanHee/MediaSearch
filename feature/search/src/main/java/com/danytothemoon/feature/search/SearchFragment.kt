@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.danytothemoon.core.designsystem.theme.SearchMediaTheme
 
 class SearchFragment : Fragment() {
@@ -56,6 +57,7 @@ class SearchFragment : Fragment() {
   private fun SearchScreen(viewmodel: SearchViewModel = viewModel()) {
     Column {
       SearchTextField(onClickSearch = { keyword ->
+        viewmodel.searchMedia(keyword)
       })
       SearchResultList()
     }
