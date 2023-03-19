@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SearchMedia"
 include(":app")
+include(":core:network")
