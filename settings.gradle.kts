@@ -16,3 +16,4 @@ rootProject.name = "SearchMedia"
 include(":app")
 include(":core:network")
 include(":feature:search")
+include(":feature:interests")
