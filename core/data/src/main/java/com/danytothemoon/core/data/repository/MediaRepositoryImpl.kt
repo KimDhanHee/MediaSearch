@@ -18,7 +18,7 @@ class MediaRepositoryImpl @Inject constructor(
     val images = network.getImages(keyword).documents.map {
       MediaItem(url = it.url, datetime = it.datetime)
     }
-    val result = (videos + images).sortedBy { it.datetime }
+    val result = (videos + images).sortedByDescending { it.datetime }
     emit(result)
   }.flowOn(Dispatchers.IO)
 }
