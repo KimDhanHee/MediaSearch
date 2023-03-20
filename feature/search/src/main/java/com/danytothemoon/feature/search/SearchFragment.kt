@@ -76,7 +76,15 @@ class SearchFragment : Fragment() {
         viewmodel.searchMedia(keyword)
       })
       val uiState by viewmodel.uiState.collectAsState()
-      SearchResult(uiState)
+      SearchResult(
+        uiState,
+        onClickItem = { mediaItem ->
+          when {
+            mediaItem.isInterested -> viewmodel.deregisterInterest(mediaItem)
+            else -> viewmodel.registerInterest(mediaItem)
+          }
+        }
+      )
     }
   }
 
@@ -106,13 +114,9 @@ class SearchFragment : Fragment() {
   }
 
   @Composable
-  private fun SearchResult(uiState: SearchUiState) {
+  private fun SearchResult(uiState: SearchUiState, onClickItem: (MediaItem) -> Unit) {
     when (uiState) {
-      is SearchUiState.Success -> MediaItemList(
-        mediaItems = uiState.mediaItems,
-        onClickItem = {
-        }
-      )
+      is SearchUiState.Success -> MediaItemList(uiState.mediaItems, onClickItem)
       else -> Unit
     }
   }

@@ -24,4 +24,10 @@ class MediaRepositoryImpl @Inject constructor(
   ) { videos, images ->
     (videos + images).sortedByDescending { it.datetime }
   }.flowOn(Dispatchers.IO)
+
+  override fun registerInterest(mediaItem: MediaItem) {
+  }
+
+  override fun deregisterInterest(mediaItem: MediaItem) {
+  }
 }

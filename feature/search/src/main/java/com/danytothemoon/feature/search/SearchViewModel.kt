@@ -2,6 +2,7 @@ package com.danytothemoon.feature.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.core.data.repository.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,5 +25,11 @@ class SearchViewModel @Inject constructor(
         _uiState.value = SearchUiState.Success(it)
       }
     }
+  }
+
+  fun registerInterest(mediaItem: MediaItem) {
+  }
+
+  fun deregisterInterest(mediaItem: MediaItem) {
   }
 }
