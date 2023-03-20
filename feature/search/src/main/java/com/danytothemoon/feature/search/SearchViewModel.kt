@@ -28,8 +28,14 @@ class SearchViewModel @Inject constructor(
   }
 
   fun registerInterest(mediaItem: MediaItem) {
+    viewModelScope.launch {
+      mediaRepository.registerInterest(mediaItem)
+    }
   }
 
   fun deregisterInterest(mediaItem: MediaItem) {
+    viewModelScope.launch {
+      mediaRepository.deregisterInterest(mediaItem)
+    }
   }
 }

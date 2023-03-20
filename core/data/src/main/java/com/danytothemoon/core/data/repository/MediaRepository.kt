@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface MediaRepository {
   fun search(keyword: String): Flow<List<MediaItem>>
 
-  fun registerInterest(mediaItem: MediaItem)
+  suspend fun registerInterest(mediaItem: MediaItem)
 
-  fun deregisterInterest(mediaItem: MediaItem)
+  suspend fun deregisterInterest(mediaItem: MediaItem)
 }
