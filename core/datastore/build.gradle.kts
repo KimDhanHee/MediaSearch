@@ -2,6 +2,7 @@ plugins {
   kotlin("kapt")
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
+  id("kotlinx-serialization")
   id("com.google.dagger.hilt.android")
 }
 
@@ -20,6 +21,7 @@ android {
 
 dependencies {
   implementation(libs.androidx.datastore.preferences)
+  implementation(libs.kotlinx.serialization.json)
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)
 }
