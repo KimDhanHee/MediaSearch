@@ -7,10 +7,11 @@ import java.time.format.DateTimeFormatter
 data class MediaItem(
   val url: String,
   val datetime: LocalDateTime,
+  val isInterested: Boolean = false,
 ) {
   val dateStr: String = datetime.format("yyyy-MM-dd")
   val timeStr: String = datetime.format("HH:mm:ss")
-}
 
-fun LocalDateTime.format(pattern: String) =
-  this.toJavaLocalDateTime().format(DateTimeFormatter.ofPattern(pattern))
+  private fun LocalDateTime.format(pattern: String): String =
+    this.toJavaLocalDateTime().format(DateTimeFormatter.ofPattern(pattern))
+}
