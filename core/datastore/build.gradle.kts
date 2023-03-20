@@ -6,12 +6,8 @@ plugins {
 }
 
 android {
-  namespace = "com.danytothemoon.core.data"
+  namespace = "com.danytothemoon.core.datastore"
   compileSdk = 33
-
-  defaultConfig {
-    minSdk = 26
-  }
 
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,10 +19,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":core:datastore"))
-  implementation(project(":core:network"))
-
-  implementation(libs.kotlinx.datetime)
+  implementation(libs.androidx.datastore.preferences)
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)
 }
