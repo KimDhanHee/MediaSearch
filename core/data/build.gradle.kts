@@ -19,6 +19,8 @@ android {
 }
 
 dependencies {
+  implementation(project(":core:network"))
+
   implementation(libs.kotlinx.datetime)
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)

@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.danytothemoon.core.designsystem.theme.SearchMediaTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
   override fun onCreateView(
     inflater: LayoutInflater,
