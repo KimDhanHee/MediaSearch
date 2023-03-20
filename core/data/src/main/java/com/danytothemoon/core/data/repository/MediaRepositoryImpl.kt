@@ -25,7 +25,9 @@ class MediaRepositoryImpl @Inject constructor(
     },
     preference.interestedUrlSet
   ) { videos, images, interestedUrls ->
-    (videos + images).sortedByDescending { it.datetime }
+    (videos + images)
+      .map { it.copy(isInterested = it.url in interestedUrls) }
+      .sortedByDescending { it.datetime }
   }.flowOn(Dispatchers.IO)
 
   override suspend fun registerInterest(mediaItem: MediaItem) {

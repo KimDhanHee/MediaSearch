@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -21,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Cancel
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -149,24 +151,35 @@ class SearchFragment : Fragment() {
         contentDescription = null,
         contentScale = ContentScale.FillWidth
       )
-      Column(
+      Row(
         modifier = Modifier
           .fillMaxWidth()
           .background(Color.Black.copy(alpha = 0.5f))
           .padding(8.dp)
           .align(Alignment.BottomCenter),
-        horizontalAlignment = Alignment.End
+        verticalAlignment = Alignment.CenterVertically
       ) {
-        Text(
-          text = media.dateStr,
-          textAlign = TextAlign.End,
-          color = Color.White
+        Icon(
+          imageVector = Icons.Rounded.Star, contentDescription = null, tint = when {
+            media.isInterested -> Color.Red
+            else -> Color.White
+          }
         )
-        Text(
-          text = media.timeStr,
-          textAlign = TextAlign.End,
-          color = Color.White
-        )
+        Column(
+          modifier = Modifier.weight(1f),
+          horizontalAlignment = Alignment.End
+        ) {
+          Text(
+            text = media.dateStr,
+            textAlign = TextAlign.End,
+            color = Color.White
+          )
+          Text(
+            text = media.timeStr,
+            textAlign = TextAlign.End,
+            color = Color.White
+          )
+        }
       }
     }
   }
