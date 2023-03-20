@@ -20,8 +20,7 @@ data class MetaInfo(
 
 @Serializable
 data class VideoDocument(
-  val title: String,
-  val url: String,
+  @SerialName("thumbnail") val url: String,
   @Serializable(DatetimeSerializer::class)
   val datetime: LocalDateTime,
 )
@@ -34,8 +33,7 @@ data class SearchImageResult(
 
 @Serializable
 data class ImageDocument(
-  @SerialName("thumbnail_url") val thumbnailUrl: String,
-  @SerialName("image_url") val imageUrl: String,
+  @SerialName("thumbnail_url") val url: String,
   @Serializable(DatetimeSerializer::class)
   val datetime: LocalDateTime,
 )
