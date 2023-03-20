@@ -39,4 +39,5 @@ dependencies {
   androidTestImplementation(libs.androidx.compose.test.junit)
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)
+  implementation(libs.glide)
 }
