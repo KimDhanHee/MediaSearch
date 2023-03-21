@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MediaRepositoryImpl @Inject constructor(
@@ -36,13 +37,19 @@ class MediaRepositoryImpl @Inject constructor(
     searchedResultList
   }.flowOn(Dispatchers.IO)
 
+  override fun getInterestedMediaList(): Flow<List<MediaItem>> =
+    preference.interestedMediaListFlow.map { list ->
+      list.map { it.toMediaItem() }
+        .sortedByDescending { it.datetime }
+    }
+
   override suspend fun registerInterest(mediaItem: MediaItem) {
-    preference.registerInterest(mediaItem.toInterestedMedia())
+    preference.registerInterest(mediaItem.url)
   }
 
   override suspend fun deregisterInterest(mediaItem: MediaItem) {
-    preference.deregisterInterest(mediaItem.toInterestedMedia())
+    preference.deregisterInterest(mediaItem.url)
   }
 
-  private fun MediaItem.toInterestedMedia() = InterestedMedia(url, datetime)
+  private fun InterestedMedia.toMediaItem() = MediaItem(url, datetime, isInterested = true)
 }

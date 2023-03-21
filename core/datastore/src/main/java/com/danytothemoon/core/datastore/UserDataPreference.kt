@@ -9,6 +9,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.danytothemoon.core.datastore.model.InterestedMedia
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -29,17 +32,21 @@ class UserDataPreference @Inject constructor(
   val interestedMediaListFlow =
     context.datastore.data.map { preferences -> preferences.interestedMediaList }
 
-  suspend fun registerInterest(media: InterestedMedia) {
+  suspend fun registerInterest(url: String) {
     context.datastore.edit { preferences ->
+      val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+
       preferences[prefInterestedMediaList] =
-        Json.encodeToString(preferences.interestedMediaList + media)
+        Json.encodeToString(preferences.interestedMediaList + InterestedMedia(url, datetime = now))
     }
   }
 
-  suspend fun deregisterInterest(media: InterestedMedia) {
+  suspend fun deregisterInterest(url: String) {
     context.datastore.edit { preferences ->
+      val target = preferences.interestedMediaList.find { it.url == url } ?: return@edit
+
       preferences[prefInterestedMediaList] =
-        Json.encodeToString(preferences.interestedMediaList - media)
+        Json.encodeToString(preferences.interestedMediaList - target)
     }
   }
 }
