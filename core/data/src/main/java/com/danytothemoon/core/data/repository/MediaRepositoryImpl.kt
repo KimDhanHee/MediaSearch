@@ -2,6 +2,7 @@ package com.danytothemoon.core.data.repository
 
 import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.core.datastore.UserDataPreference
+import com.danytothemoon.core.datastore.model.InterestedMedia
 import com.danytothemoon.core.network.retrofit.SearchMediaNetwork
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,25 +17,32 @@ class MediaRepositoryImpl @Inject constructor(
 ) : MediaRepository {
   override fun search(keyword: String): Flow<List<MediaItem>> = combine(
     flow {
-      val videos = network.getVideos(keyword).documents.map { MediaItem(it.url, it.datetime) }
-      emit(videos)
+      val searchedVideoList =
+        network.getVideos(keyword).documents.map { MediaItem(it.url, it.datetime) }
+      emit(searchedVideoList)
     },
     flow {
-      val images = network.getImages(keyword).documents.map { MediaItem(it.url, it.datetime) }
-      emit(images)
+      val searchedImageList =
+        network.getImages(keyword).documents.map { MediaItem(it.url, it.datetime) }
+      emit(searchedImageList)
     },
-    preference.interestedUrlSet
-  ) { videos, images, interestedUrls ->
-    (videos + images)
-      .map { it.copy(isInterested = it.url in interestedUrls) }
+    preference.interestedMediaListFlow
+  ) { searchedVideoList, searchedImageList, interestedMediaList ->
+    val interestedUrlList = interestedMediaList.map(InterestedMedia::url)
+    val searchedResultList = (searchedVideoList + searchedImageList)
+      .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
       .sortedByDescending { it.datetime }
+
+    searchedResultList
   }.flowOn(Dispatchers.IO)
 
   override suspend fun registerInterest(mediaItem: MediaItem) {
-    preference.registerInterest(mediaItem.url)
+    preference.registerInterest(mediaItem.toInterestedMedia())
   }
 
   override suspend fun deregisterInterest(mediaItem: MediaItem) {
-    preference.deregisterInterest(mediaItem.url)
+    preference.deregisterInterest(mediaItem.toInterestedMedia())
   }
+
+  private fun MediaItem.toInterestedMedia() = InterestedMedia(url, datetime)
 }
