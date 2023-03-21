@@ -1,12 +1,10 @@
 plugins {
-  kotlin("kapt")
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
-  id("com.google.dagger.hilt.android")
 }
 
 android {
-  namespace = "com.danytothemoon.feature.search"
+  namespace = "com.danytothemoon.feature.component"
   compileSdk = 33
 
   compileOptions {
@@ -26,20 +24,7 @@ android {
 
 dependencies {
   implementation(project(":core:data"))
-  implementation(project(":core:designsystem"))
-
-  implementation(project(":feature:component"))
-
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)
-  androidTestImplementation(composeBom)
   implementation(libs.bundles.androidx.compose)
-  implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.lifecycle.runtime.ktx)
-  implementation(libs.androidx.compose.activity)
-  implementation(libs.androidx.compose.viewmodel)
-  androidTestImplementation(libs.androidx.compose.test.junit)
-  implementation(libs.hilt.android)
-  kapt(libs.hilt.compiler)
-  implementation(libs.glide)
 }
