@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.danytothemoon.core.designsystem.theme.SearchMediaTheme
-import com.danytothemoon.feature.component.MediaItemList
+import com.danytothemoon.feature.component.MediaItemGridList
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,7 @@ class InterestsFragment : Fragment() {
       SearchMediaTheme {
         val viewmodel: InterestsViewModel = viewModel()
         val mediaItems by viewmodel.interestedMediaListFlow.collectAsState()
-        MediaItemList(mediaItems, onClickItem = viewmodel::deregisterInterest)
+        MediaItemGridList(mediaItems, onClickItem = viewmodel::deregisterInterest)
       }
     }
   }

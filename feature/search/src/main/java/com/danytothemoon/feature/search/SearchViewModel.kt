@@ -27,6 +27,9 @@ class SearchViewModel @Inject constructor(
     }
   }
 
+  fun loadMoreMedia() {
+  }
+
   fun registerInterest(mediaItem: MediaItem) {
     viewModelScope.launch {
       mediaRepository.registerInterest(mediaItem)

@@ -10,15 +10,21 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,9 +38,18 @@ import com.danytothemoon.core.data.model.MediaItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MediaItemList(mediaItems: List<MediaItem>, onClickItem: (MediaItem) -> Unit) {
+fun MediaItemGridList(
+  mediaItems: List<MediaItem>,
+  onClickItem: (MediaItem) -> Unit,
+  onBottomReached: () -> Unit = {},
+) {
+  val listState = rememberLazyStaggeredGridState()
+
+  listState.OnBottomReached(onBottomReached)
+
   LazyVerticalStaggeredGrid(
     columns = StaggeredGridCells.Fixed(2),
+    state = listState,
     contentPadding = PaddingValues(8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -42,6 +57,25 @@ fun MediaItemList(mediaItems: List<MediaItem>, onClickItem: (MediaItem) -> Unit)
     items(mediaItems, key = { it.url }) { mediaItem ->
       MediaListItem(mediaItem, onClick = { onClickItem(mediaItem) })
     }
+  }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun LazyStaggeredGridState.OnBottomReached(callback: () -> Unit) {
+  val shouldLoadMore = remember {
+    derivedStateOf {
+      val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf true
+
+      lastVisibleItem.index == layoutInfo.totalItemsCount - 1
+    }
+  }
+
+  LaunchedEffect(shouldLoadMore) {
+    snapshotFlow { shouldLoadMore.value }
+      .collect {
+        if (it) callback()
+      }
   }
 }
 

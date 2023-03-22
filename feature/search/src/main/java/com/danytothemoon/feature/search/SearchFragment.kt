@@ -33,7 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.core.designsystem.theme.SearchMediaTheme
-import com.danytothemoon.feature.component.MediaItemList
+import com.danytothemoon.feature.component.MediaItemGridList
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,6 +66,9 @@ class SearchFragment : Fragment() {
             mediaItem.isInterested -> viewmodel.deregisterInterest(mediaItem)
             else -> viewmodel.registerInterest(mediaItem)
           }
+        },
+        onLoadMore = {
+          viewmodel.loadMoreMedia()
         }
       )
     }
@@ -97,9 +100,17 @@ class SearchFragment : Fragment() {
   }
 
   @Composable
-  private fun SearchResult(uiState: SearchUiState, onClickItem: (MediaItem) -> Unit) {
+  private fun SearchResult(
+    uiState: SearchUiState,
+    onClickItem: (MediaItem) -> Unit,
+    onLoadMore: () -> Unit,
+  ) {
     when (uiState) {
-      is SearchUiState.Success -> MediaItemList(uiState.mediaItems, onClickItem)
+      is SearchUiState.Success -> MediaItemGridList(
+        uiState.mediaItems,
+        onClickItem,
+        onBottomReached = onLoadMore
+      )
       else -> Unit
     }
   }
