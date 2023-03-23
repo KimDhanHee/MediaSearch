@@ -7,6 +7,7 @@ import com.danytothemoon.core.data.repository.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +22,13 @@ class SearchViewModel @Inject constructor(
     _uiState.value = SearchUiState.Loading
 
     viewModelScope.launch {
-      mediaRepository.search(keyword).collect { searchResult ->
-        _uiState.value = SearchUiState.Success(searchResult.mediaList)
+      combine(
+        mediaRepository.searchVideo(keyword),
+        mediaRepository.searchImage(keyword),
+      ) { videoResult, imageResult ->
+        videoResult.mediaList + imageResult.mediaList
+      }.collect { mediaList ->
+        _uiState.value = SearchUiState.Success(mediaList)
       }
     }
   }

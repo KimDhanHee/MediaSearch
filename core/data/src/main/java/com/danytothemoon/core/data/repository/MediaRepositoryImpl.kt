@@ -19,16 +19,28 @@ class MediaRepositoryImpl @Inject constructor(
   private val network: SearchMediaNetwork,
   private val preference: UserDataPreference,
 ) : MediaRepository {
-  override fun search(keyword: String): Flow<SearchResult> = combine(
+  override fun searchVideo(keyword: String): Flow<SearchResult> = combine(
     flow { emit(network.getVideos(keyword)) },
+    preference.interestedMediaListFlow
+  ) { searchedVideoResult, interestedMediaList ->
+    val searchedVideoList = searchedVideoResult.documents.map { it.toMediaItem() }
+    val interestedUrlList = interestedMediaList.map(InterestedMedia::url)
+
+    val mediaList = searchedVideoList
+      .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
+      .sortedByDescending { it.datetime }
+
+    SearchResult(mediaList)
+  }.flowOn(Dispatchers.IO)
+
+  override fun searchImage(keyword: String): Flow<SearchResult> = combine(
     flow { emit(network.getImages(keyword)) },
     preference.interestedMediaListFlow
-  ) { searchedVideoResult, searchedImageResult, interestedMediaList ->
-    val searchedVideoList = searchedVideoResult.documents.map { it.toMediaItem() }
+  ) { searchedImageResult, interestedMediaList ->
     val searchedImageList = searchedImageResult.documents.map { it.toMediaItem() }
     val interestedUrlList = interestedMediaList.map(InterestedMedia::url)
 
-    val mediaList = (searchedVideoList + searchedImageList)
+    val mediaList = searchedImageList
       .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
       .sortedByDescending { it.datetime }
 
