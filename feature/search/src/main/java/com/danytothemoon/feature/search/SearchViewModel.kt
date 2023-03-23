@@ -21,8 +21,8 @@ class SearchViewModel @Inject constructor(
     _uiState.value = SearchUiState.Loading
 
     viewModelScope.launch {
-      mediaRepository.search(keyword).collect {
-        _uiState.value = SearchUiState.Success(it)
+      mediaRepository.search(keyword).collect { searchResult ->
+        _uiState.value = SearchUiState.Success(searchResult.mediaList)
       }
     }
   }
