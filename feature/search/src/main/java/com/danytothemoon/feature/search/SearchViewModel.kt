@@ -26,27 +26,18 @@ class SearchViewModel @Inject constructor(
   fun searchMedia(keyword: String) {
     _uiState.value = SearchUiState.Loading
 
-    viewModelScope.launch {
-      requestInfo = RequestInfo(keyword)
+    requestInfo = RequestInfo(keyword)
 
-      combine(
-        mediaRepository.searchVideo(keyword, page = requestInfo.nextVideoPage),
-        mediaRepository.searchImage(keyword, page = requestInfo.nextImagePage),
-      ) { videoResult, imageResult ->
-        requestInfo.updateVideoRequestable(videoResult.isMoreAvailable)
-        requestInfo.updateImageRequestable(imageResult.isMoreAvailable)
-
-        videoResult.mediaList + imageResult.mediaList
-      }.collect { mediaList ->
-        currentMediaList = mediaList.sortedByDescending { it.datetime }
-        _uiState.value = SearchUiState.Success(currentMediaList)
-      }
-    }
+    getMedia()
   }
 
   fun loadMoreMedia() {
     _uiState.value = SearchUiState.Loading
 
+    getMedia()
+  }
+
+  private fun getMedia() {
     viewModelScope.launch {
       combine(
         when {
