@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class InterestedMedia(
-  val key: String,
   val url: String,
   @Serializable(DatetimeSerializer::class)
   val datetime: LocalDateTime,

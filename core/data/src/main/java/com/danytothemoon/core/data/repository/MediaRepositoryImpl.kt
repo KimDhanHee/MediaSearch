@@ -52,7 +52,7 @@ class MediaRepositoryImpl @Inject constructor(
     }
 
   override suspend fun registerInterest(mediaItem: MediaItem) {
-    preference.registerInterest(mediaItem.key, mediaItem.url)
+    preference.registerInterest(mediaItem.url)
   }
 
   override suspend fun deregisterInterest(mediaItem: MediaItem) {
