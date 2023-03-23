@@ -19,7 +19,7 @@ class MediaRepositoryImpl @Inject constructor(
   private val network: SearchMediaNetwork,
   private val preference: UserDataPreference,
 ) : MediaRepository {
-  override fun searchVideo(keyword: String): Flow<SearchResult> = combine(
+  override fun searchVideo(keyword: String, page: Int): Flow<SearchResult> = combine(
     flow { emit(network.getVideos(keyword)) },
     preference.interestedMediaListFlow
   ) { searchedVideoResult, interestedMediaList ->
@@ -33,7 +33,7 @@ class MediaRepositoryImpl @Inject constructor(
     SearchResult(mediaList)
   }.flowOn(Dispatchers.IO)
 
-  override fun searchImage(keyword: String): Flow<SearchResult> = combine(
+  override fun searchImage(keyword: String, page: Int): Flow<SearchResult> = combine(
     flow { emit(network.getImages(keyword)) },
     preference.interestedMediaListFlow
   ) { searchedImageResult, interestedMediaList ->

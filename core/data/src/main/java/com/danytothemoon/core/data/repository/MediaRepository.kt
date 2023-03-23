@@ -5,9 +5,9 @@ import com.danytothemoon.core.data.model.SearchResult
 import kotlinx.coroutines.flow.Flow
 
 interface MediaRepository {
-  fun searchVideo(keyword: String): Flow<SearchResult>
+  fun searchVideo(keyword: String, page: Int): Flow<SearchResult>
 
-  fun searchImage(keyword: String): Flow<SearchResult>
+  fun searchImage(keyword: String, page: Int): Flow<SearchResult>
 
   fun getInterestedMediaList(): Flow<List<MediaItem>>
 

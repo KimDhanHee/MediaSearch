@@ -23,8 +23,8 @@ class SearchViewModel @Inject constructor(
 
     viewModelScope.launch {
       combine(
-        mediaRepository.searchVideo(keyword),
-        mediaRepository.searchImage(keyword),
+        mediaRepository.searchVideo(keyword, page = 1),
+        mediaRepository.searchImage(keyword, page = 1),
       ) { videoResult, imageResult ->
         videoResult.mediaList + imageResult.mediaList
       }.collect { mediaList ->
