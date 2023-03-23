@@ -20,7 +20,7 @@ class MediaRepositoryImpl @Inject constructor(
   private val preference: UserDataPreference,
 ) : MediaRepository {
   override fun searchVideo(keyword: String, page: Int): Flow<SearchResult> = combine(
-    flow { emit(network.getVideos(keyword)) },
+    flow { emit(network.getVideos(keyword, page = page)) },
     preference.interestedMediaListFlow
   ) { searchedVideoResult, interestedMediaList ->
     val searchedVideoList = searchedVideoResult.documents.map { it.toMediaItem() }
@@ -28,13 +28,12 @@ class MediaRepositoryImpl @Inject constructor(
 
     val mediaList = searchedVideoList
       .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
-      .sortedByDescending { it.datetime }
 
-    SearchResult(mediaList)
+    SearchResult(mediaList, isMoreAvailable = !searchedVideoResult.meta.isEnd)
   }.flowOn(Dispatchers.IO)
 
   override fun searchImage(keyword: String, page: Int): Flow<SearchResult> = combine(
-    flow { emit(network.getImages(keyword)) },
+    flow { emit(network.getImages(keyword, page = page)) },
     preference.interestedMediaListFlow
   ) { searchedImageResult, interestedMediaList ->
     val searchedImageList = searchedImageResult.documents.map { it.toMediaItem() }
@@ -42,9 +41,8 @@ class MediaRepositoryImpl @Inject constructor(
 
     val mediaList = searchedImageList
       .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
-      .sortedByDescending { it.datetime }
 
-    SearchResult(mediaList)
+    SearchResult(mediaList, isMoreAvailable = !searchedImageResult.meta.isEnd)
   }.flowOn(Dispatchers.IO)
 
   override fun getInterestedMediaList(): Flow<List<MediaItem>> =
@@ -54,7 +52,7 @@ class MediaRepositoryImpl @Inject constructor(
     }
 
   override suspend fun registerInterest(mediaItem: MediaItem) {
-    preference.registerInterest(mediaItem.url)
+    preference.registerInterest(mediaItem.key, mediaItem.url)
   }
 
   override suspend fun deregisterInterest(mediaItem: MediaItem) {

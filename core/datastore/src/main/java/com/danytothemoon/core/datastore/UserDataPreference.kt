@@ -32,18 +32,19 @@ class UserDataPreference @Inject constructor(
   val interestedMediaListFlow =
     context.datastore.data.map { preferences -> preferences.interestedMediaList }
 
-  suspend fun registerInterest(url: String) {
+  suspend fun registerInterest(key: String, url: String) {
     context.datastore.edit { preferences ->
       val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+      val newInterest = InterestedMedia(key, url, datetime = now)
 
       preferences[prefInterestedMediaList] =
-        Json.encodeToString(preferences.interestedMediaList + InterestedMedia(url, datetime = now))
+        Json.encodeToString(preferences.interestedMediaList + newInterest)
     }
   }
 
-  suspend fun deregisterInterest(url: String) {
+  suspend fun deregisterInterest(key: String) {
     context.datastore.edit { preferences ->
-      val target = preferences.interestedMediaList.find { it.url == url } ?: return@edit
+      val target = preferences.interestedMediaList.find { it.key == key } ?: return@edit
 
       preferences[prefInterestedMediaList] =
         Json.encodeToString(preferences.interestedMediaList - target)

@@ -54,7 +54,7 @@ fun MediaItemGridList(
     horizontalArrangement = Arrangement.spacedBy(8.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp)
   ) {
-    items(mediaItems, key = { it.url }) { mediaItem ->
+    items(mediaItems, key = { it.key }) { mediaItem ->
       MediaListItem(mediaItem, onClick = { onClickItem(mediaItem) })
     }
   }
