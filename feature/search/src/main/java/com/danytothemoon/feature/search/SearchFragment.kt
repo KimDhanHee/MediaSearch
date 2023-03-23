@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Cancel
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.danytothemoon.core.data.model.MediaItem
@@ -111,7 +114,18 @@ class SearchFragment : Fragment() {
         onClickItem,
         onBottomReached = onLoadMore
       )
+      SearchUiState.Loading -> Loading()
       else -> Unit
+    }
+  }
+
+  @Composable
+  private fun Loading() {
+    Dialog(
+      onDismissRequest = { },
+      DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+      CircularProgressIndicator()
     }
   }
 }
