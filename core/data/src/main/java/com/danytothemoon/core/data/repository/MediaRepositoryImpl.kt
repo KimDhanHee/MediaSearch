@@ -1,5 +1,6 @@
 package com.danytothemoon.core.data.repository
 
+import com.danytothemoon.core.data.di.IoDispatcher
 import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.core.data.model.SearchResult
 import com.danytothemoon.core.datastore.UserDataPreference
@@ -7,17 +8,18 @@ import com.danytothemoon.core.datastore.model.InterestedMedia
 import com.danytothemoon.core.network.model.ImageDocument
 import com.danytothemoon.core.network.model.VideoDocument
 import com.danytothemoon.core.network.retrofit.SearchMediaNetwork
-import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class MediaRepositoryImpl @Inject constructor(
   private val network: SearchMediaNetwork,
   private val preference: UserDataPreference,
+  @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : MediaRepository {
   override fun searchVideo(keyword: String, page: Int): Flow<SearchResult> = combine(
     flow { emit(network.getVideos(keyword, page = page)) },
@@ -30,7 +32,7 @@ class MediaRepositoryImpl @Inject constructor(
       .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
 
     SearchResult(mediaList, isMoreAvailable = !searchedVideoResult.meta.isEnd)
-  }.flowOn(Dispatchers.IO)
+  }.flowOn(dispatcher)
 
   override fun searchImage(keyword: String, page: Int): Flow<SearchResult> = combine(
     flow { emit(network.getImages(keyword, page = page)) },
@@ -43,7 +45,7 @@ class MediaRepositoryImpl @Inject constructor(
       .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
 
     SearchResult(mediaList, isMoreAvailable = !searchedImageResult.meta.isEnd)
-  }.flowOn(Dispatchers.IO)
+  }.flowOn(dispatcher)
 
   override fun getInterestedMediaList(): Flow<List<MediaItem>> =
     preference.interestedMediaListFlow.map { list ->
