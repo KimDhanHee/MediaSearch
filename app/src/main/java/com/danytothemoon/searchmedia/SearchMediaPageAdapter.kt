@@ -17,15 +17,8 @@ class SearchMediaPageAdapter(activity: AppCompatActivity) : FragmentStateAdapter
   }
 }
 
-enum class SearchMediaPage {
-  SEARCH,
-  INTERESTS,
+enum class SearchMediaPage(@StringRes val titleRes: Int) {
+  SEARCH(R.string.tab_title_search),
+  INTERESTS(R.string.tab_title_interests),
   ;
-
-  @get:StringRes
-  val tabTitleRes: Int
-    get() = when (this) {
-      SEARCH -> R.string.tab_title_search
-      INTERESTS -> R.string.tab_title_interests
-    }
 }

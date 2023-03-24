@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
       viewPager.adapter = SearchMediaPageAdapter(this@MainActivity)
 
       TabLayoutMediator(viewTab, viewPager) { tab, position ->
-        tab.text = getString(position.toPage().tabTitleRes)
+        tab.text = getString(position.toPage().titleRes)
       }.attach()
     }
   }
