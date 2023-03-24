@@ -4,9 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,10 +35,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.fragment.app.Fragment
@@ -58,9 +69,8 @@ class SearchFragment : Fragment() {
   @Composable
   private fun SearchScreen(viewmodel: SearchViewModel = viewModel()) {
     Column {
-      SearchTextField(onClickSearch = { keyword ->
-        viewmodel.searchMedia(keyword)
-      })
+      SearchTextField(onClickSearch = { keyword -> viewmodel.searchMedia(keyword) })
+
       val uiState by viewmodel.uiState.collectAsState()
       SearchResult(
         uiState,
@@ -121,11 +131,35 @@ class SearchFragment : Fragment() {
 
   @Composable
   private fun Loading() {
+    SkeletonList()
     Dialog(
       onDismissRequest = { },
       DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
       CircularProgressIndicator()
     }
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Composable
+  private fun SkeletonList() {
+    LazyVerticalStaggeredGrid(
+      columns = StaggeredGridCells.Fixed(2),
+      contentPadding = PaddingValues(8.dp),
+      horizontalArrangement = Arrangement.spacedBy(8.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      items(count = 16) { SkeletonListItem() }
+    }
+  }
+
+  @Composable
+  private fun SkeletonListItem() {
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .height(196.dp)
+        .background(color = Color.Gray.copy(alpha = 0.5f), shape = RoundedCornerShape(8.dp))
+    ) {}
   }
 }
