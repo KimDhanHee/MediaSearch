@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,14 +38,20 @@ class InterestsFragment : Fragment() {
   ): View = ComposeView(requireContext()).apply {
     setContent {
       SearchMediaTheme {
-        val viewmodel: InterestsViewModel = viewModel()
-        val mediaItems by viewmodel.interestedMediaListFlow.collectAsState()
-
-        when {
-          mediaItems.isEmpty() -> EmptyInterest()
-          else -> MediaItemGridList(mediaItems, onClickItem = viewmodel::deregisterInterest)
+        Surface(color = MaterialTheme.colorScheme.background) {
+          InterestsScreen()
         }
       }
+    }
+  }
+
+  @Composable
+  private fun InterestsScreen(viewmodel: InterestsViewModel = viewModel()) {
+    val mediaItems by viewmodel.interestedMediaListFlow.collectAsState()
+
+    when {
+      mediaItems.isEmpty() -> EmptyInterest()
+      else -> MediaItemGridList(mediaItems, onClickItem = viewmodel::deregisterInterest)
     }
   }
 
