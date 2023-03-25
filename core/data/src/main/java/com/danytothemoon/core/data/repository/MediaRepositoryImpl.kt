@@ -47,7 +47,7 @@ class MediaRepositoryImpl @Inject constructor(
     SearchResult(mediaList, isMoreAvailable = !searchedImageResult.meta.isEnd)
   }.flowOn(dispatcher)
 
-  override fun getInterestedMediaList(): Flow<List<MediaItem>> =
+  override fun getInterestedMediaListFlow(): Flow<List<MediaItem>> =
     preference.interestedMediaListFlow.map { list ->
       list.map { it.toMediaItem() }
         .sortedByDescending { it.datetime }

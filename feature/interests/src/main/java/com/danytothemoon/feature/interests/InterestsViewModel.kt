@@ -14,7 +14,7 @@ import javax.inject.Inject
 class InterestsViewModel @Inject constructor(
   private val mediaRepository: MediaRepository,
 ) : ViewModel() {
-  val interestedMediaListFlow = mediaRepository.getInterestedMediaList().stateIn(
+  val interestedMediaListFlow = mediaRepository.getInterestedMediaListFlow().stateIn(
     viewModelScope,
     SharingStarted.WhileSubscribed(),
     emptyList(),

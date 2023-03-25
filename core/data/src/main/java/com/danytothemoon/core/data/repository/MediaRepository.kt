@@ -9,7 +9,7 @@ interface MediaRepository {
 
   fun searchImage(keyword: String, page: Int): Flow<SearchResult>
 
-  fun getInterestedMediaList(): Flow<List<MediaItem>>
+  fun getInterestedMediaListFlow(): Flow<List<MediaItem>>
 
   suspend fun registerInterest(mediaItem: MediaItem)
 
