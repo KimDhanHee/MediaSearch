@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.core.data.repository.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -19,47 +23,75 @@ class SearchViewModel @Inject constructor(
   private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Idle)
   val uiState: StateFlow<SearchUiState> = _uiState
 
-  private lateinit var requestInfo: RequestInfo
+  private val interestedUrlListFlow = mediaRepository.getInterestedMediaListFlow()
+    .map { mediaList -> mediaList.map(MediaItem::url) }
+    .stateIn(
+      viewModelScope,
+      SharingStarted.WhileSubscribed(),
+      emptyList(),
+    )
 
   private var currentMediaList: List<MediaItem> = emptyList()
 
+  init {
+    viewModelScope.launch {
+      interestedUrlListFlow.collect { interestedUrlList ->
+        if (_uiState.value is SearchUiState.Success) {
+          _uiState.value = SearchUiState.Success(
+            currentMediaList.map { it.copy(isInterested = it.url in interestedUrlList) }
+          )
+        }
+      }
+    }
+  }
+
+  private lateinit var requestInfo: RequestInfo
+
   fun searchMedia(keyword: String) {
-    _uiState.value = SearchUiState.Loading
-
     requestInfo = RequestInfo(keyword)
+    currentMediaList = emptyList()
 
-    getMedia()
+    loadMedia()
   }
 
   fun loadMoreMedia() {
-    _uiState.value = SearchUiState.Loading
-
-    getMedia()
+    loadMedia()
   }
 
-  private fun getMedia() {
-    viewModelScope.launch {
-      combine(
-        when {
-          requestInfo.isVideoRequestable ->
-            mediaRepository.searchVideo(requestInfo.keyword, page = requestInfo.nextVideoPage)
-          else -> emptyFlow()
-        },
-        when {
-          requestInfo.isImageRequestable ->
-            mediaRepository.searchImage(requestInfo.keyword, page = requestInfo.nextImagePage)
-          else -> emptyFlow()
-        }
-      ) { videoResult, imageResult ->
-        requestInfo.updateVideoRequestable(videoResult.isMoreAvailable)
-        requestInfo.updateImageRequestable(imageResult.isMoreAvailable)
+  private fun loadMedia() {
+    _uiState.value = SearchUiState.Loading
 
-        videoResult.mediaList + imageResult.mediaList
-      }.collect { mediaList ->
-        currentMediaList = (currentMediaList + mediaList).sortedByDescending { it.datetime }
-        _uiState.value = SearchUiState.Success(currentMediaList)
+    viewModelScope.launch {
+      getNextMediaListFlow().collect { nextMediaList ->
+        currentMediaList = (currentMediaList + nextMediaList)
+          .distinctBy { it.url }
+          .sortedByDescending { it.datetime }
+
+        _uiState.value = SearchUiState.Success(
+          currentMediaList.map { it.copy(isInterested = it.url in interestedUrlListFlow.value) }
+        )
+
+        this.cancel()
       }
     }
+  }
+
+  private fun getNextMediaListFlow() = combine(
+    when {
+      requestInfo.isVideoRequestable ->
+        mediaRepository.searchVideo(requestInfo.keyword, page = requestInfo.nextVideoPage)
+      else -> emptyFlow()
+    },
+    when {
+      requestInfo.isImageRequestable ->
+        mediaRepository.searchImage(requestInfo.keyword, page = requestInfo.nextImagePage)
+      else -> emptyFlow()
+    }
+  ) { videoResponse, imageResponse ->
+    requestInfo.updateVideoRequestable(videoResponse.isMoreAvailable)
+    requestInfo.updateImageRequestable(imageResponse.isMoreAvailable)
+
+    videoResponse.mediaList + imageResponse.mediaList
   }
 
   fun registerInterest(mediaItem: MediaItem) {
@@ -76,7 +108,7 @@ class SearchViewModel @Inject constructor(
 }
 
 private class RequestInfo(val keyword: String) {
-  var imagePage: Int = 0
+  private var imagePage: Int = 0
   private var videoPage: Int = 0
 
   var isVideoRequestable: Boolean = true
@@ -95,7 +127,7 @@ private class RequestInfo(val keyword: String) {
 
   val nextVideoPage: Int
     get() {
-      require(isVideoRequestable) { "Video request is not allowed" }
+      require(isVideoRequestable) { "check isVideoRequestable first" }
 
       videoPage += 1
 
@@ -104,7 +136,7 @@ private class RequestInfo(val keyword: String) {
 
   val nextImagePage: Int
     get() {
-      require(isImageRequestable) { "Image request is not allowed" }
+      require(isImageRequestable) { "check isImageRequestable first" }
 
       imagePage += 1
 

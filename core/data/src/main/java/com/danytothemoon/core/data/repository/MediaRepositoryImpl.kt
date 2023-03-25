@@ -11,7 +11,6 @@ import com.danytothemoon.core.network.retrofit.SearchMediaNetwork
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -21,37 +20,25 @@ class MediaRepositoryImpl @Inject constructor(
   private val preference: UserDataPreference,
   @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : MediaRepository {
-  override fun searchVideo(keyword: String, page: Int): Flow<SearchResult> = combine(
-    flow { emit(network.getVideos(keyword, page = page)) },
-    preference.interestedMediaListFlow
-  ) { searchedVideoResult, interestedMediaList ->
-    val searchedVideoList = searchedVideoResult.documents.map { it.toMediaItem() }
-    val interestedUrlList = interestedMediaList.map(InterestedMedia::url)
+  override fun searchVideo(keyword: String, page: Int): Flow<SearchResult> = flow {
+    val response = network.getVideos(keyword, page = page)
+    val searchedVideoList = response.documents.map { it.toMediaItem() }
 
-    val mediaList = searchedVideoList
-      .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
-
-    SearchResult(mediaList, isMoreAvailable = !searchedVideoResult.meta.isEnd)
+    emit(SearchResult(searchedVideoList, isMoreAvailable = !response.meta.isEnd))
   }.flowOn(dispatcher)
 
-  override fun searchImage(keyword: String, page: Int): Flow<SearchResult> = combine(
-    flow { emit(network.getImages(keyword, page = page)) },
-    preference.interestedMediaListFlow
-  ) { searchedImageResult, interestedMediaList ->
-    val searchedImageList = searchedImageResult.documents.map { it.toMediaItem() }
-    val interestedUrlList = interestedMediaList.map(InterestedMedia::url)
+  override fun searchImage(keyword: String, page: Int): Flow<SearchResult> = flow {
+    val response = network.getImages(keyword, page = page)
+    val searchedImageResult = response.documents.map { it.toMediaItem() }
 
-    val mediaList = searchedImageList
-      .map { media -> media.copy(isInterested = media.url in interestedUrlList) }
-
-    SearchResult(mediaList, isMoreAvailable = !searchedImageResult.meta.isEnd)
+    emit(SearchResult(searchedImageResult, isMoreAvailable = !response.meta.isEnd))
   }.flowOn(dispatcher)
 
   override fun getInterestedMediaListFlow(): Flow<List<MediaItem>> =
     preference.interestedMediaListFlow.map { list ->
       list.map { it.toMediaItem() }
         .sortedByDescending { it.datetime }
-    }
+    }.flowOn(dispatcher)
 
   override suspend fun registerInterest(mediaItem: MediaItem) {
     preference.registerInterest(mediaItem.url)
