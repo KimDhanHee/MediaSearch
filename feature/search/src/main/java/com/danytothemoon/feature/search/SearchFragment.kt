@@ -133,7 +133,7 @@ class SearchFragment : Fragment() {
   private fun Loading() {
     SkeletonList()
     Dialog(
-      onDismissRequest = { },
+      onDismissRequest = {},
       DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
       CircularProgressIndicator()
