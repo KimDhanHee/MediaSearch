@@ -63,7 +63,7 @@ fun MediaItemGridList(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LazyStaggeredGridState.OnBottomReached(callback: () -> Unit) {
-  val shouldLoadMore = remember {
+  val isBottomReached = remember {
     derivedStateOf {
       val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull() ?: return@derivedStateOf true
 
@@ -71,8 +71,8 @@ private fun LazyStaggeredGridState.OnBottomReached(callback: () -> Unit) {
     }
   }
 
-  LaunchedEffect(shouldLoadMore) {
-    snapshotFlow { shouldLoadMore.value }
+  LaunchedEffect(isBottomReached) {
+    snapshotFlow { isBottomReached.value }
       .collect {
         if (it) callback()
       }
@@ -81,14 +81,14 @@ private fun LazyStaggeredGridState.OnBottomReached(callback: () -> Unit) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun MediaListItem(media: MediaItem, onClick: () -> Unit) {
+private fun MediaListItem(mediaItem: MediaItem, onClick: () -> Unit) {
   Box(
     modifier = Modifier
       .clip(RoundedCornerShape(8.dp))
       .clickable { onClick() })
   {
     GlideImage(
-      model = media.url,
+      model = mediaItem.url,
       contentDescription = null,
       contentScale = ContentScale.FillWidth
     )
@@ -100,27 +100,41 @@ private fun MediaListItem(media: MediaItem, onClick: () -> Unit) {
         .align(Alignment.BottomCenter),
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Icon(
-        imageVector = Icons.Rounded.Star, contentDescription = null, tint = when {
-          media.isInterested -> Color.Red
-          else -> Color.White
-        }
-      )
-      Column(
+      InterestIcon(isActivated = mediaItem.isInterested)
+      DateTimeIndicator(
         modifier = Modifier.weight(1f),
-        horizontalAlignment = Alignment.End
-      ) {
-        Text(
-          text = media.dateStr,
-          textAlign = TextAlign.End,
-          color = Color.White
-        )
-        Text(
-          text = media.timeStr,
-          textAlign = TextAlign.End,
-          color = Color.White
-        )
-      }
+        dateText = mediaItem.dateStr,
+        timeText = mediaItem.timeStr
+      )
     }
+  }
+}
+
+@Composable
+private fun InterestIcon(isActivated: Boolean) {
+  Icon(
+    imageVector = Icons.Rounded.Star, contentDescription = null, tint = when {
+      isActivated -> Color.Red
+      else -> Color.White
+    }
+  )
+}
+
+@Composable
+private fun DateTimeIndicator(modifier: Modifier, dateText: String, timeText: String) {
+  Column(
+    modifier = modifier,
+    horizontalAlignment = Alignment.End
+  ) {
+    Text(
+      text = dateText,
+      textAlign = TextAlign.End,
+      color = Color.White
+    )
+    Text(
+      text = timeText,
+      textAlign = TextAlign.End,
+      color = Color.White
+    )
   }
 }
