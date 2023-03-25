@@ -7,6 +7,7 @@ import com.danytothemoon.core.data.repository.MediaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,10 @@ class SearchViewModel @Inject constructor(
   private var currentMediaList: List<MediaItem> = emptyList()
 
   init {
+    observeInterestedMediaItem()
+  }
+
+  private fun observeInterestedMediaItem() {
     viewModelScope.launch {
       interestedUrlListFlow.collect { interestedUrlList ->
         if (_uiState.value is SearchUiState.Success) {
@@ -76,7 +81,7 @@ class SearchViewModel @Inject constructor(
     }
   }
 
-  private fun getNextMediaListFlow() = combine(
+  private fun getNextMediaListFlow(): Flow<List<MediaItem>> = combine(
     when {
       requestInfo.isVideoRequestable ->
         mediaRepository.searchVideo(requestInfo.keyword, page = requestInfo.nextVideoPage)
