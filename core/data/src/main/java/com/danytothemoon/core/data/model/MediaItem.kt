@@ -9,7 +9,6 @@ data class MediaItem(
   val datetime: LocalDateTime,
   val isInterested: Boolean = false,
 ) {
-  val key: String = "${url}_${datetime}"
   val dateStr: String = datetime.format("yyyy-MM-dd")
   val timeStr: String = datetime.format("HH:mm:ss")
 
