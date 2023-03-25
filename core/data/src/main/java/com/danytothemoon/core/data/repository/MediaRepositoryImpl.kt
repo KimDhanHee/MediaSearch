@@ -37,7 +37,6 @@ class MediaRepositoryImpl @Inject constructor(
   override fun getInterestedMediaListFlow(): Flow<List<MediaItem>> =
     preference.interestedMediaListFlow.map { list ->
       list.map { it.toMediaItem() }
-        .sortedByDescending { it.datetime }
     }.flowOn(dispatcher)
 
   override suspend fun registerInterest(mediaItem: MediaItem) {

@@ -47,7 +47,7 @@ class InterestsFragment : Fragment() {
 
   @Composable
   private fun InterestsScreen(viewmodel: InterestsViewModel = viewModel()) {
-    val mediaItems by viewmodel.interestedMediaListFlow.collectAsState()
+    val mediaItems by viewmodel.interestedMediaListFlow.collectAsState(emptyList())
 
     when {
       mediaItems.isEmpty() -> EmptyInterest()
