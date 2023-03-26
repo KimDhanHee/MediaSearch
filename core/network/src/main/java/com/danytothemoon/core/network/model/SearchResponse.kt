@@ -13,8 +13,6 @@ data class SearchVideoResult(
 
 @Serializable
 data class MetaInfo(
-  @SerialName("total_count") val totalCount: Int,
-  @SerialName("pageable_count") val pageableCount: Int,
   @SerialName("is_end") val isEnd: Boolean,
 )
 
