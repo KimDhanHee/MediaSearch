@@ -76,8 +76,6 @@ class SearchViewModel @Inject constructor(
           _uiState.value = SearchUiState.Success(
             currentMediaList.map { it.copy(isInterested = it.url in interestedUrlListFlow.value) }
           )
-
-          this.cancel()
         }
       }.onFailure {
         _uiState.value = SearchUiState.Error
