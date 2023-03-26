@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkAdd
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,6 +61,9 @@ class InterestsFragment : Fragment() {
   @Composable
   private fun EmptyInterest() {
     Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -68,7 +74,7 @@ class InterestsFragment : Fragment() {
         tint = Color.Gray
       )
       Spacer(modifier = Modifier.size(24.dp))
-      Text(text = stringResource(id = R.string.empty_interest))
+      Text(text = stringResource(id = R.string.empty_interest), textAlign = TextAlign.Center)
     }
   }
 }
