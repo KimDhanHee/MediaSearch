@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="search_input_text_field_hint">미디어 검색 키워드를 입력하세요</string>
+  <string name="search_error_description">네트워크 연결을 확인한 뒤 다시 시도해주세요.</string>
 </resources>

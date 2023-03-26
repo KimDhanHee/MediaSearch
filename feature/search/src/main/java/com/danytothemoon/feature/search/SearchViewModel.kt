@@ -67,16 +67,20 @@ class SearchViewModel @Inject constructor(
     _uiState.value = SearchUiState.Loading
 
     viewModelScope.launch {
-      getNextMediaListFlow().collect { nextMediaList ->
-        currentMediaList = (currentMediaList + nextMediaList)
-          .distinctBy { it.url }
-          .sortedByDescending { it.datetime }
+      runCatching {
+        getNextMediaListFlow().collect { nextMediaList ->
+          currentMediaList = (currentMediaList + nextMediaList)
+            .distinctBy { it.url }
+            .sortedByDescending { it.datetime }
 
-        _uiState.value = SearchUiState.Success(
-          currentMediaList.map { it.copy(isInterested = it.url in interestedUrlListFlow.value) }
-        )
+          _uiState.value = SearchUiState.Success(
+            currentMediaList.map { it.copy(isInterested = it.url in interestedUrlListFlow.value) }
+          )
 
-        this.cancel()
+          this.cancel()
+        }
+      }.onFailure {
+        _uiState.value = SearchUiState.Error
       }
     }
   }
