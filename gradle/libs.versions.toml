@@ -10,7 +10,7 @@ androidxDataStore = "1.0.0"
 androidMaterial = "1.7.0"
 
 androidxComposeBom = "2023.03.00"
-androidxComposeCompiler = "1.4.5"
+androidxComposeCompiler = "1.4.2"
 androidxComposeActivity = "1.6.1"
 androidxComposeViewModel = "2.5.1"
 

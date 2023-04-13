@@ -51,8 +51,8 @@ fun MediaItemGridList(
     columns = StaggeredGridCells.Fixed(2),
     state = listState,
     contentPadding = PaddingValues(8.dp),
+    verticalItemSpacing = 8.dp,
     horizontalArrangement = Arrangement.spacedBy(8.dp),
-    verticalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     items(mediaItems, key = { it.url }) { mediaItem ->
       MediaListItem(mediaItem, onClick = { onClickItem(mediaItem) })

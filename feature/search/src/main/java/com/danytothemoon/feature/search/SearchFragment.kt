@@ -154,8 +154,8 @@ class SearchFragment : Fragment() {
     LazyVerticalStaggeredGrid(
       columns = StaggeredGridCells.Fixed(2),
       contentPadding = PaddingValues(8.dp),
+      verticalItemSpacing = 8.dp,
       horizontalArrangement = Arrangement.spacedBy(8.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       items(count = 16) { SkeletonListItem() }
     }
