@@ -52,6 +52,11 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:interests"))
 
+    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(composeBom)
+    implementation(libs.bundles.androidx.compose)
+    implementation(libs.androidx.compose.activity)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.viewpager)
