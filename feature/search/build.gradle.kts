@@ -35,7 +35,6 @@ dependencies {
   androidTestImplementation(composeBom)
   implementation(libs.bundles.androidx.compose)
   implementation(libs.androidx.compose.viewmodel)
-  androidTestImplementation(libs.androidx.compose.test.junit)
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)
   implementation(libs.kotlinx.datetime)
