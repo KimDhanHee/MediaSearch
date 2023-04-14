@@ -43,12 +43,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.danytothemoon.core.data.model.MediaItem
 import com.danytothemoon.feature.component.MediaItemGridList
 
 @Composable
-fun SearchScreen(viewmodel: SearchViewModel = viewModel()) {
+fun SearchScreen(viewmodel: SearchViewModel = hiltViewModel()) {
   Column {
     SearchTextField(onClickSearch = { keyword -> viewmodel.searchMedia(keyword) })
 

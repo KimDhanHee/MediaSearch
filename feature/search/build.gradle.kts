@@ -36,6 +36,7 @@ dependencies {
   implementation(libs.bundles.androidx.compose)
   implementation(libs.androidx.compose.viewmodel)
   implementation(libs.hilt.android)
+  implementation(libs.hilt.compose.navigation)
   kapt(libs.hilt.compiler)
   implementation(libs.kotlinx.datetime)
 }

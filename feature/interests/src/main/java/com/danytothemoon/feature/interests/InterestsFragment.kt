@@ -19,11 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.danytothemoon.feature.component.MediaItemGridList
 
 @Composable
-fun InterestsScreen(viewmodel: InterestsViewModel = viewModel()) {
+fun InterestsScreen(viewmodel: InterestsViewModel = hiltViewModel()) {
   val mediaItems by viewmodel.interestedMediaListFlow.collectAsState(emptyList())
 
   when {
