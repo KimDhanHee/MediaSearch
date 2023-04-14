@@ -49,7 +49,7 @@ import com.danytothemoon.feature.component.MediaItemGridList
 
 @Composable
 fun SearchScreen(viewmodel: SearchViewModel = hiltViewModel()) {
-  Column {
+  Column(modifier = Modifier.fillMaxSize()) {
     SearchTextField(onClickSearch = { keyword -> viewmodel.searchMedia(keyword) })
 
     val uiState by viewmodel.uiState.collectAsState()

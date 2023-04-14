@@ -24,11 +24,13 @@ import com.danytothemoon.feature.component.MediaItemGridList
 
 @Composable
 fun InterestsScreen(viewmodel: InterestsViewModel = hiltViewModel()) {
-  val mediaItems by viewmodel.interestedMediaListFlow.collectAsState(emptyList())
+  Column(modifier = Modifier.fillMaxSize()) {
+    val mediaItems by viewmodel.interestedMediaListFlow.collectAsState(emptyList())
 
-  when {
-    mediaItems.isEmpty() -> EmptyInterest()
-    else -> MediaItemGridList(mediaItems, onClickItem = viewmodel::deregisterInterest)
+    when {
+      mediaItems.isEmpty() -> EmptyInterest()
+      else -> MediaItemGridList(mediaItems, onClickItem = viewmodel::deregisterInterest)
+    }
   }
 }
 
